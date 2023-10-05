@@ -52,7 +52,8 @@ android {
 
 dependencies {
     //API RxNorm
-    implementation ("implementation 'com.github.dmytro-zaitsev:rxnorm-api:2.0.0';")
+    implementation ("com.github.dmytro-zaitsev:rxnorm-api:2.0.0")
+
 
     // Jetpack Compose
     implementation("androidx.compose.ui:ui:1.0.4")
@@ -65,6 +66,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     //Firebase
+    implementation ("com.google.firebase:firebase-analytics:20.0.0") // Asegúrate de tener la versión correcta
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")

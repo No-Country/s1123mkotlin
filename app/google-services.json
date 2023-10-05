@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "558477184789",
+    "project_id": "meds4kids-1d375",
+    "storage_bucket": "meds4kids-1d375.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558477184789:android:487e294e277802118c231c",
+        "android_client_info": {
+          "package_name": "com.example.s1123mkotlin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "558477184789-ln5nkr5n0s1vaebgss9gv2i579f05jb8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.s1123mkotlin",
+            "certificate_hash": "59e37ee51817b399315c503e9294189cf8ecca6a"
+          }
+        },
+        {
+          "client_id": "558477184789-9tbu8k50j5cpehtt3u1h9u3ugdbidnk2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJAs2rTXeYgB3fqm46mrF9KqSOnjhg9Ko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "558477184789-9tbu8k50j5cpehtt3u1h9u3ugdbidnk2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
