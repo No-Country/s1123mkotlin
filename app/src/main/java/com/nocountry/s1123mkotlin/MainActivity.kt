@@ -1,31 +1,29 @@
-package com.nocountry.s1123mkotlin
+package com.nocuntry.s1123mkotlin
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.nocountry.s1123mkotlin.ui.theme.S1123mkotlinTheme
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.navigation.compose.rememberNavController
+import com.nocountry.s1123mkotlin.AppNavigation
+import com.nocountry.s1123mkotlin.login.LoginScreen
+import com.nocountry.s1123mkotlin.ui.theme.MediChildTheme
 
 class MainActivity : ComponentActivity() {
-    private val apiService = RxNormApiService.create()
 
-
+    @OptIn(ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            ) {
 
+
+        setContent {
+            MediChildTheme {
+                // Create a navigation controller
+                val navController = rememberNavController()
+
+
+                AppNavigation(navController)
             }
         }
     }
 }
-

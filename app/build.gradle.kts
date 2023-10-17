@@ -1,28 +1,31 @@
+
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    id("kotlin-android")
+    id("kotlin-parcelize")
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
 }
 
+
 android {
-    namespace = "com.nocountry.s1123mkotlin"
-    compileSdk = 33
+    namespace = ("com.nocuntry.s1123mkotlin")
+    compileSdk =(34)
 
     defaultConfig {
         applicationId = "com.nocountry.s1123mkotlin"
-        minSdk = 21
-        targetSdk = 33
+        minSdkVersion(26)
+        targetSdkVersion(33)
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -30,35 +33,94 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
     buildFeatures {
         compose = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+
+    packagingOptions {
+        resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
+    }
+    kapt {
+        javacOptions {
+            option("-Adagger.fastInit=enabled")
+            option("-Adagger.hilt.android.internal.disableAndroidSuperclassValidation")
+            option("-Adagger.hilt.android.internal.projectType=app")
+            option("-Adagger.hilt.internal.useAggregatingRootProcessor")
         }
+        useBuildCache = true // Opcional, para habilitar la caché de compilación
     }
 }
 
 dependencies {
-    //API RxNorm
-    implementation ("com.github.dmytro-zaitsev:rxnorm-api:2.0.0")
+
+    //Alarm
+    implementation ("androidx.core:core-ktx:1.7.0")
+    implementation ("androidx.work:work-runtime-ktx:2.7.0")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0")
+    implementation ("androidx.work:work-runtime-ktx:2.7.1")
+
+    implementation ("androidx.core:core-ktx:1.8.0")
+
+
+    implementation("androidx.constraintlayout:constraintlayout-compose-android:1.1.0-alpha13")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.google.firebase:firebase-sessions:1.0.2")
+    implementation("com.google.firebase:protolite-well-known-types:18.0.0")
+    implementation("com.google.android.engage:engage-core:1.3.0")
+    implementation("com.google.firebase:firebase-inappmessaging-ktx:20.3.5")
+    implementation("com.google.android.gms:play-services-mlkit-text-recognition-common:19.0.0")
+    implementation("com.google.firebase:firebase-crashlytics-buildtools:2.9.9")
+    val nav_version = "2.5.3"
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+
+
+    // Dependencia de Room
+    val room_version = "2.5.0"
+    kapt ("androidx.room:room-compiler:2.5.0")
+    implementation ("androidx.room:room-runtime:2.5.0")
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    implementation ("androidx.room:room-runtime:2.4.0")
+    implementation ("androidx.room:room-ktx:2.4.0")
+    implementation ("androidx.room:room-runtime:2.4.0")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0-alpha02")
+    implementation ("androidx.navigation:navigation-compose:2.4.0-alpha02")
+    implementation ("androidx.room:room-ktx:2.5.2")
+    
+    //DateTimerPicker
+    implementation ("com.google.android.material:material:1.5.0")
+
+    //Hilt
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
 
 
     // Jetpack Compose
+    implementation ("androidx.navigation:navigation-compose:2.4.0-alpha10")
     implementation("androidx.compose.ui:ui:1.0.4")
     implementation("androidx.compose.ui:ui-tooling:1.0.4")
     implementation("androidx.compose.material:material:1.0.4")
+    implementation ("androidx.activity:activity-compose:1.3.1")
+
+
+    //ViewModel:
+    implementation ("androidx.lifecycle:lifecycle-viewmodel:2.3.1")
+    implementation ("androidx.lifecycle:lifecycle-livedata:2.3.1")
+
 
 
     //Retrofit
@@ -72,6 +134,9 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-database-ktx")
 
+    implementation ("androidx.core:core-ktx:1.7.0")
+    implementation ("androidx.activity:activity-ktx:1.3.1")
+
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.7.2")
@@ -80,6 +145,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.7.4")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -87,4 +153,6 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+
 }

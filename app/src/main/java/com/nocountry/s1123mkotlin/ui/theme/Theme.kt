@@ -13,7 +13,9 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.colorResource
 import androidx.core.view.WindowCompat
+import com.nocuntry.s1123mkotlin.R
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -38,12 +40,16 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun S1123mkotlinTheme(
+fun MediChildTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = true, // Puedes mantener esta opción si quieres colores dinámicos
     content: @Composable () -> Unit
 ) {
+    val fondoPantallas = colorResource(id = R.color.fondo)
+    val fondoBotones = colorResource(id = R.color.fondoBotones)
+    val textoBotones = colorResource(id = R.color.textoBotones)
+    val texto = colorResource(id = R.color.texto)
+
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
@@ -57,13 +63,18 @@ fun S1123mkotlinTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            window.statusBarColor = fondoPantallas.toArgb() // Establece el color de la barra de estado según el fondo
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = colorScheme.copy(
+            /* Aquí puedes ajustar los colores según tus preferencias */
+            primary = fondoPantallas,
+            secondary = fondoBotones,
+            tertiary = textoBotones
+        ),
         typography = Typography,
         content = content
     )
