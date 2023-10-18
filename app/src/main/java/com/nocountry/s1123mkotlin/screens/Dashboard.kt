@@ -1,198 +1,192 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+package com.nocountry.s1123mkotlin.screens
 
 import android.annotation.SuppressLint
-import android.widget.DatePicker
-import android.widget.TimePicker
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.google.type.Date
 import com.nocountry.s1123mkotlin.login.UserProfile
-import com.nocountry.s1123mkotlin.screens.Reminder
 import com.nocuntry.s1123mkotlin.R
 
+
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Dashboard(
-    profiles: List<UserProfile>,
-    reminders: List<Reminder>,
-    onProfileClick: (UserProfile) -> Unit,
-    onAddReminderClick: () -> Unit
-)
+fun DashboardScreen(
+    navController: NavController,
+    profiles: List<UserProfile>
+) {
+    var query by remember { mutableStateOf("") }
 
-{
-    Column(
-        modifier = Modifier.fillMaxSize(),
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Dashboard") }
+            )
+        }
     ) {
-        Text(
-            text = "Dashboard",
-            style = MaterialTheme.typography.h4,
-            modifier = Modifier.padding(16.dp)
-        )
-
-        Text(
-            text = "Perfiles de Usuario",
-            style = MaterialTheme.typography.h5,
-            modifier = Modifier.padding(16.dp)
-        )
-
-        LazyColumn {
-            items(profiles) { profile ->
-                ProfileCard(profile = profile)
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-        }
-
-        Button(
-            onClick = onAddReminderClick,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Agregar Perfil")
-        }
-
-        Text(
-            text = "Recordatorios",
-            style = MaterialTheme.typography.h5,
-            modifier = Modifier.padding(16.dp)
-        )
-
-        LazyColumn {
-            items(reminders) { reminder ->
-                ReminderCard(reminder = reminder)
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-        }
-
-        FloatingActionButton(
-            onClick = { onAddReminderClick() }
-        ) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = "Agregar Recordatorio")
-        }
-    }
-}
-
-@Composable
-fun ProfileCard(profile: UserProfile) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        // Muestra la imagen del perfil de usuario
-        Image(
-            painter = painterResource(id = profile.imageResId),
-            contentDescription = null,
+        Column(
             modifier = Modifier
-                .size(80.dp)
-                .clip(CircleShape)
+                .fillMaxSize()
+                .padding(16.dp)
                 .background(colorResource(id = R.color.fondo))
-        )
+                .wrapContentWidth(align = Alignment.CenterHorizontally)
+        ) {
+            UserProfileAvatar(imageResId = profiles[0].imageResId) // Muestra el avatar del primer usuario
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Muestra el nombre del perfil de usuario
-        Text(
-            text = profile.name,
-            style = MaterialTheme.typography.h6,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp)
-        )
+            LazyColumn {
+                items(profiles) { profile ->
+                    UserProfileCard(profile = profile, navController)
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                // Carta de "Recordatorios"
+                DashboardCard(
+                    title = "Recordatorios",
+                    imageResId = R.drawable.recordatorio,
+                    onClick = { navController.navigate("reminders") }
+                )
+
+                // Carta de "Consultas"
+                DashboardCard(
+                    title = "Consultas",
+                    imageResId = R.drawable.consultas,
+                    onClick = { navController.navigate("consultations") }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                // Carta de "Farmacias"
+                DashboardCard(
+                    title = "Farmacias",
+                    imageResId = R.drawable.farmacia,
+                    onClick = { navController.navigate("pharmacies") }
+                )
+
+                // Carta de "Síntomas"
+                DashboardCard(
+                    title = "Síntomas",
+                    imageResId = R.drawable.sintomas,
+                    onClick = { navController.navigate("symptoms") }
+                )
+            }
+        }
     }
 }
 
 @Composable
-fun ReminderCard(reminder: Reminder) {
-    Column(
+fun UserProfileAvatar(imageResId: Int) {
+    // avatar del perfil del usuario
+    Image(
+        painter = painterResource(id = imageResId),
+        contentDescription = null,
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
+            .size(50.dp)
+            .clip(CircleShape)
+            .background(Color.Gray)
+    )
+}
+
+@Composable
+fun UserProfileCard(profile: UserProfile, navController: NavController) {
+    Card(
+        modifier = Modifier
+            .size(120.dp)
+            .clickable { navController.navigate("profile/${profile.profileId}") }
+            .padding(4.dp),
+        shape = MaterialTheme.shapes.medium
     ) {
-        // Muestra el título del recordatorio
-        Text(
-            text = reminder.title,
-            style = MaterialTheme.typography.h6,
-            textAlign = TextAlign.Start,
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp)
-        )
+                .fillMaxSize()
+                .padding(8.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Mostrar la imagen del perfil
+            Image(
+                painter = painterResource(id = profile.imageResId),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(CircleShape)
+                    .background(Color.Gray)
+            )
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
-        // Muestra la fecha y hora del recordatorio
-        Text(
-            text = "Fecha: ${reminder.date}, Hora: ${reminder.time}",
-            style = MaterialTheme.typography.body2,
-            textAlign = TextAlign.Start,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp)
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Muestra el intervalo de repetición del recordatorio
-        Text(
-            text = "Repetición: ${reminder.repeatInterval}",
-            style = MaterialTheme.typography.body2,
-            textAlign = TextAlign.Start,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp)
-        )
+            // Mostrar el nombre del perfil
+            Text(
+                text = profile.name,
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 
-
 @Composable
-fun ReminderList(reminders: List<Reminder>) {
-    Column {
-        reminders.forEach { reminder ->
-            Text(text = reminder.title)
-            Text(text = "Fecha: ${reminder.date}, Hora: ${reminder.time}")
-            Text(text = "Repetición: ${reminder.repeatInterval}")
+fun DashboardCard(title: String, imageResId: Int, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .size(200.dp)
+            .clickable(onClick = onClick)
+            .padding(4.dp),
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = imageResId),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape)
+                    .background(Color.Gray)
+            )
+
             Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = title,
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }

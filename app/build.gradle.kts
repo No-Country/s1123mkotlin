@@ -67,6 +67,10 @@ android {
 
 dependencies {
 
+    // Dependencias de Compose Material 3
+    implementation ("androidx.compose.material3:material3:1.0.0-beta01")
+    implementation("androidx.compose.material3:material3")
+
     //Alarm
     implementation ("androidx.core:core-ktx:1.7.0")
     implementation ("androidx.work:work-runtime-ktx:2.7.0")

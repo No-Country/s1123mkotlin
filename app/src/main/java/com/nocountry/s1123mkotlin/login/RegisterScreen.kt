@@ -1,9 +1,14 @@
+
+package com.nocountry.s1123mkotlin.login
+
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -24,8 +29,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.nocountry.s1123mkotlin.AppScreens
-import com.nocountry.s1123mkotlin.ui.theme.MediChildTheme
 import com.nocuntry.s1123mkotlin.R
 
 
@@ -56,7 +59,7 @@ fun RegisterScreen(navController: NavController) {
 
         Text(
             text = "Crear Cuenta",
-            fontSize = 20.sp,
+            fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(vertical = 8.dp)
         )
@@ -109,7 +112,8 @@ fun RegisterScreen(navController: NavController) {
                     password = it
                     // Agregar la validación aquí
                     if (it.length < 8 || !it.matches(Regex("^[a-zA-Z0-9]*$"))) {
-                        errorMessage = "La contraseña debe contener al menos 8 caracteres alfanuméricos."
+                        errorMessage =
+                            "La contraseña debe contener al menos 8 caracteres alfanuméricos."
                     } else {
                         errorMessage = ""
                     }
@@ -138,7 +142,7 @@ fun RegisterScreen(navController: NavController) {
             if (errorMessage.isNotEmpty()) {
                 Text(
                     text = errorMessage,
-                    color = Color.Red,
+                    color = Color.Yellow,
                     fontSize = 14.sp,
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp)
                 )
@@ -152,20 +156,22 @@ fun RegisterScreen(navController: NavController) {
                     // Enviar al usuario al dashboard
                     navController.navigate("Dashboard")
                 },
+
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(colorResource(id = R.color.fondoBotones))
                     .align(Alignment.CenterHorizontally)
-                    .padding(horizontal = 26.dp)
+                    .padding(horizontal = 26.dp),
+                shape = RoundedCornerShape(22.dp),
+                colors = ButtonDefaults.buttonColors(
+                    colorResource(id = R.color.fondoBotones))
+
             ) {
                 Text(
                     text = "Registrar",
-                    color = Color.White
+                    color = Color.DarkGray
                 )
             }
+
         }
     }
 }
-
-
-
