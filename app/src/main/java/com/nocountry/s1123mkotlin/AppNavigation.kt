@@ -1,6 +1,8 @@
 package com.nocountry.s1123mkotlin
 
 
+import DashboardScreen
+import LoginScreen
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -9,10 +11,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.nocountry.s1123mkotlin.login.LoginScreen
 import com.nocountry.s1123mkotlin.login.RegisterScreen
 import com.nocountry.s1123mkotlin.login.UserProfile
-import com.nocountry.s1123mkotlin.screens.DashboardScreen
 import com.nocountry.s1123mkotlin.screens.Main
 import com.nocuntry.s1123mkotlin.R
 
@@ -29,9 +29,9 @@ fun AppNavigation(navController: NavHostController) {
         }
 
         composable(route = AppScreens.Login.route) {
-            LoginScreen(navController = navController) {
+            LoginScreen(navController = navController)
 
-            }
+
         }
 
         composable(route = AppScreens.Register.route) {
@@ -39,12 +39,12 @@ fun AppNavigation(navController: NavHostController) {
         }
 
         composable(route = AppScreens.Dashboard.route) {
-
             DashboardScreen(
                 navController = navController,
-                emptyList()
+                profiles = emptyList(), // Lista de perfiles de usuario (ajusta esta lista)
             )
         }
+
     }
 }
 

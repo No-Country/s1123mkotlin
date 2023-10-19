@@ -1,11 +1,7 @@
-package com.nocountry.s1123mkotlin.login
-
-
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,11 +22,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.nocountry.s1123mkotlin.AppScreens
 import com.nocuntry.s1123mkotlin.R
 
 @Composable
-fun LoginScreen(navController: NavController, function: () -> Unit) {
+fun LoginScreen(navController: NavController) {
     var errorMessage by remember { mutableStateOf("") }
     val context = LocalContext.current
     val googleSignInClient = remember { GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_SIGN_IN) }
@@ -56,7 +51,7 @@ fun LoginScreen(navController: NavController, function: () -> Unit) {
     ) {
         Spacer(modifier = Modifier.height(20.dp))
 
-        Image(
+        Icon(
             painter = painterResource(id = R.drawable.medichild),
             contentDescription = null,
             modifier = Modifier.size(150.dp)
@@ -86,10 +81,10 @@ fun GoogleSignInButton(
             .padding(horizontal = 26.dp),
         shape = RoundedCornerShape(22.dp),
         colors = ButtonDefaults.buttonColors(
-            colorResource(id = R.color.fondoBotones))
+            colorResource(id = R.color.fondoBotones)
+        )
     ) {
-        Text(text = "Iniciar Sesión con Google",
-            color = Color.DarkGray)
+        Text(text = "Iniciar Sesión con Google", color= Color.DarkGray)
     }
 }
 
@@ -101,7 +96,7 @@ fun firebaseAuthWithGoogle(navController: NavController, account: GoogleSignInAc
     auth.signInWithCredential(googleCredential)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                navController.navigate("Dashboard")
+                navController.navigate("Dashboard") // Redirigir al usuario al dashboard
             } else {
                 val exception = task.exception
                 if (exception != null) {

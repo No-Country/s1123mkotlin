@@ -1,9 +1,7 @@
 package com.nocountry.s1123mkotlin.screens
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
-import java.time.LocalDate
-import java.time.LocalTime
+import java.util.Date
 
 enum class RepeatInterval {
     DAILY,
@@ -15,11 +13,9 @@ enum class RepeatInterval {
 
 @Entity(tableName = "reminders")
 data class Reminder(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
     val title: String,
-    val date: LocalDate,
-    val time: LocalTime,
-    val repeatInterval: RepeatInterval
+    val date: Date,
+    val time: Date,
+    val repeatInterval: String
 )
 
