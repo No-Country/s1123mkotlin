@@ -9,4 +9,6 @@
     <color name="textoBotones">#283BB5</color>
 
     <color name="titulos">#FDFEFF</color>
+
+    <color name="TopAppBar">#ABB4DF</color>
 </resources>

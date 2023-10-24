@@ -1,4 +1,4 @@
-package com.nocountry.s1123mkotlin.login
+package com.nocountry.s1123mkotlin.UserProfile
 
 
 import androidx.room.Entity

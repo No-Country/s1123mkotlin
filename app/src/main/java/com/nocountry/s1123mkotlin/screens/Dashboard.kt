@@ -1,199 +1,172 @@
-import android.annotation.SuppressLint
+package com.nocountry.s1123mkotlin.screens
+
+import android.content.res.Resources
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.res.painterResource
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.google.android.engage.social.datamodel.Profile
-import com.nocountry.s1123mkotlin.login.UserProfile
+import androidx.navigation.compose.rememberNavController
 import com.nocuntry.s1123mkotlin.R
+import kotlinx.coroutines.NonDisposableHandle.parent
 
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-
-fun DashboardScreen(
+fun Dashboard(
     navController: NavController,
-    profiles: List<UserProfile>
+    onRemindersClick: () -> Unit,
+    onConsultationsClick: () -> Unit,
+    onPharmacyClick: () -> Unit,
+    onSymptomsClick: () -> Unit,
+    onUserProfileClick: () -> Unit
 ) {
-    var query by remember { mutableStateOf("") }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Dashboard") }
-            )
-        }
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            // Columna para los perfiles de usuario
-            Column(
-                modifier = Modifier
-                    .width(200.dp)
-                    .background(color = Color(0xFF4D88BC))
-            ) {
-                if (profiles.isNotEmpty()) {
-                    UserProfileAvatar(imageResId = profiles[0].imageResId)
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    profiles.forEach { profile ->
-                        UserProfileCard(profile = profile, navController)
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            // Columna para las cardview
-
-            LazyColumn {
-                item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        DashboardCard(
-                            title = "Consultas",
-                            imageResId = R.drawable.consultas,
-                            onClick = { navController.navigate("consultations") }
-                        )
-                        DashboardCard(
-                            title = "Recordatorios",
-                            imageResId = R.drawable.recordatorio,
-                            onClick = { navController.navigate("reminders") }
-                        )
-                    }
-                }
-                item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        DashboardCard(
-                            title = "Farmacias",
-                            imageResId = R.drawable.farmacia,
-                            onClick = { navController.navigate("pharmacies") }
-                        )
-                        DashboardCard(
-                            title = "Síntomas",
-                            imageResId = R.drawable.sintomas,
-                            onClick = { navController.navigate("symptoms") }
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-@Composable
-fun UserProfileAvatar(imageResId: Int) {
-    // Agregar aquí el avatar del perfil del usuario (Imagen)
-    Image(
-        painter = painterResource(id = imageResId),
-        contentDescription = null,
+    Column(
         modifier = Modifier
-            .size(100.dp)
-            .clip(CircleShape)
-            .background(Color.Gray)
-    )
-}
-
-@Composable
-fun UserProfileCard(profile: UserProfile, navController: NavController) {
-    Card(
-        modifier = Modifier
-            .size(120.dp)
-            .clickable { navController.navigate("profile/${profile.profileId}") }
-            .padding(4.dp),
-        shape = MaterialTheme.shapes.medium
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Mostrar la imagen del perfil
-            Image(
-                painter = painterResource(id = profile.imageResId),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(CircleShape)
-                    .background(Color.Gray)
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // Mostrar el nombre del perfil
-            Text(
-                text = profile.name,
-                fontSize = 12.sp,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
-
-@Composable
-fun DashboardCard(title: String, imageResId: Int, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .size(200.dp)
-            .clickable(onClick = onClick)
+            .fillMaxSize()
             .background(colorResource(id = R.color.fondo))
-            .padding(4.dp),
-        shape = MaterialTheme.shapes.medium
+            .padding(16.dp)
+    ) {
+        TopAppBar(
+            title = {
+                Text(
+                    text = "MediChild",
+                    style = MaterialTheme.typography.h6,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+            },
+            backgroundColor = colorResource(id = R.color.TopAppBar),
+            actions = {
+                // perfil de usuario
+                IconButton(onClick = onUserProfileClick) {
+                    Icon(
+                        imageVector = Icons.Default.AccountCircle,
+                        contentDescription = "Perfil Pablo",
+                    )
+                    Icon(
+                        imageVector = Icons.Default.AccountCircle,
+                        contentDescription = "Perfil Juana",
+                    )
+                }
+            }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(16.dp)
+        ) {
+            item {
+                CardView("Recordatorios", R.drawable.recordatorio, navController, "remindersScreen")
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            item {
+                CardView("Síntomas", R.drawable.sintomas,navController, "sintomas")
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            item {
+                CardView("Consultas", R.drawable.consultas, navController, "consultas")
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            item {
+                CardView("Farmacias", R.drawable.farmacia, navController, "farmacias")
+            }
+        }
+    }
+}
+
+
+@Composable
+fun CardView(
+    title: String,
+    imageResourceName: Int,
+    navController: NavController,
+    route: String
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { navController.navigate(route) },
+        elevation = 8.dp,
+        shape = RoundedCornerShape(20.dp)
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.padding(16.dp)
         ) {
-            Image(
-                painter = painterResource(id = imageResId),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(50.dp)
-                    .clip(CircleShape)
-                    .background(Color.Gray)
-            )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Image(
+                painter = painterResource(id = imageResourceName),
+                contentDescription = title,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = title,
-                fontSize = 14.sp,
+                style = MaterialTheme.typography.h6,
                 textAlign = TextAlign.Center
             )
         }
     }
 }
+
+@Preview
+@Composable
+fun DashboardPreview() {
+    val navController = rememberNavController()
+    Dashboard(
+        navController = navController,
+        onConsultationsClick = {},
+        onPharmacyClick = {},
+        onSymptomsClick = {},
+        onUserProfileClick = {},
+        onRemindersClick = {}
+    )
+}
+
+private fun getDrawableResourceId(name: String) =
+    Resources.getSystem().getIdentifier(name, "drawable", "android")

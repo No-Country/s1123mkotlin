@@ -1,17 +1,19 @@
-
 plugins {
+    id("dagger.hilt.android.plugin")
     id("com.android.application")
-    id("kotlin-android")
-    id("kotlin-parcelize")
-    id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("org.jetbrains.kotlin.android")
+    id("kotlin-parcelize")
     id("com.google.gms.google-services")
+    id("com.google.devtools.ksp")
+    id("kotlin-kapt")
+
 }
 
 
 android {
     namespace = ("com.nocuntry.s1123mkotlin")
-    compileSdk =(34)
+    compileSdk = (34)
 
     defaultConfig {
         applicationId = "com.nocountry.s1123mkotlin"
@@ -56,11 +58,9 @@ android {
     }
     kapt {
         javacOptions {
-            option("-Adagger.fastInit=enabled")
-            option("-Adagger.hilt.android.internal.disableAndroidSuperclassValidation")
-            option("-Adagger.hilt.android.internal.projectType=app")
-            option("-Adagger.hilt.internal.useAggregatingRootProcessor")
+            option("-Adagger.hilt.android.internal.disableAndroidSuperclassValidation=true")
         }
+        
         useBuildCache = true // Opcional, para habilitar la caché de compilación
     }
 }
@@ -68,17 +68,17 @@ android {
 dependencies {
 
     // Dependencias de Compose Material 3
-    implementation ("androidx.compose.material3:material3:1.0.0-beta01")
+    implementation("androidx.compose.material3:material3:1.0.0-beta01")
     implementation("androidx.compose.material3:material3")
 
 
     //Alarm
-    implementation ("androidx.core:core-ktx:1.7.0")
-    implementation ("androidx.work:work-runtime-ktx:2.7.0")
-    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0")
-    implementation ("androidx.work:work-runtime-ktx:2.7.1")
+    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.work:work-runtime-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0")
+    implementation("androidx.work:work-runtime-ktx:2.7.1")
 
-    implementation ("androidx.core:core-ktx:1.8.0")
+    implementation("androidx.core:core-ktx:1.8.0")
 
 
     implementation("androidx.constraintlayout:constraintlayout-compose-android:1.1.0-alpha13")
@@ -96,37 +96,34 @@ dependencies {
 
     // Dependencia de Room
     val room_version = "2.5.0"
-    kapt ("androidx.room:room-compiler:2.5.0")
-    implementation ("androidx.room:room-runtime:2.5.0")
+    kapt("androidx.room:room-compiler:2.5.0")
+    implementation("androidx.room:room-runtime:2.5.0")
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
-    implementation ("androidx.room:room-runtime:2.4.0")
-    implementation ("androidx.room:room-ktx:2.4.0")
-    implementation ("androidx.room:room-runtime:2.4.0")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0-alpha02")
-    implementation ("androidx.navigation:navigation-compose:2.4.0-alpha02")
-    implementation ("androidx.room:room-ktx:2.5.2")
-    
+    implementation("androidx.room:room-runtime:2.4.0")
+    implementation("androidx.room:room-ktx:2.4.0")
+    implementation("androidx.room:room-runtime:2.4.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0-alpha02")
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha02")
+    implementation("androidx.room:room-ktx:2.5.2")
+
     //DateTimerPicker
-    implementation ("com.google.android.material:material:1.5.0")
+    implementation("com.google.android.material:material:1.5.0")
 
-    //Hilt
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
-
+    //Dagger - Hilt
+    implementation("com.google.dagger:hilt-android:2.48.1")
+    kapt("com.google.dagger:hilt-compiler:2.48.1")
 
     // Jetpack Compose
-    implementation ("androidx.navigation:navigation-compose:2.4.0-alpha10")
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
     implementation("androidx.compose.ui:ui:1.0.4")
     implementation("androidx.compose.ui:ui-tooling:1.0.4")
     implementation("androidx.compose.material:material:1.0.4")
-    implementation ("androidx.activity:activity-compose:1.3.1")
-
+    implementation("androidx.activity:activity-compose:1.3.1")
 
     //ViewModel:
-    implementation ("androidx.lifecycle:lifecycle-viewmodel:2.3.1")
-    implementation ("androidx.lifecycle:lifecycle-livedata:2.3.1")
-
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-livedata:2.3.1")
 
 
     //Retrofit
@@ -134,14 +131,14 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     //Firebase
-    implementation ("com.google.firebase:firebase-analytics:20.0.0") // Asegúrate de tener la versión correcta
+    implementation("com.google.firebase:firebase-analytics:20.0.0") // Asegúrate de tener la versión correcta
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-database-ktx")
 
-    implementation ("androidx.core:core-ktx:1.7.0")
-    implementation ("androidx.activity:activity-ktx:1.3.1")
+    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.activity:activity-ktx:1.3.1")
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
@@ -160,5 +157,10 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-
+}
+kapt {
+    correctErrorTypes = true
+}
+hilt {
+    enableAggregatingTask = true
 }

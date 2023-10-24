@@ -1,4 +1,4 @@
-package com.nocountry.s1123mkotlin.login
+package com.nocountry.s1123mkotlin.UserProfile
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -14,6 +14,6 @@ interface UserProfileDao {
     fun getUserProfile(profileId: Int): UserProfile
 
         @Query("SELECT * FROM user_profiles")
-        fun getProfiles(): LiveData<List<UserProfile>> // LiveData para observar cambios en la lista
+        fun getProfiles(): LiveData<List<UserProfile>>
     }
 
