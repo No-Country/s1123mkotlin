@@ -1,10 +1,11 @@
 package com.nocountry.s1123mkotlin.di
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.nocountry.s1123mkotlin.AppDatabase
-import com.nocountry.s1123mkotlin.screens.ReminderDao
 import com.nocountry.s1123mkotlin.screens.ReminderRepository
+import com.nocountry.s1123mkotlin.screens.ReminderDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,7 +33,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideReminderRepository(reminderDao: ReminderDao): ReminderRepository {
-        return ReminderRepository(reminderDao)
+    fun provideReminderRepository(reminderDao: ReminderDao, application: Application): ReminderRepository {
+        return ReminderRepository(reminderDao, application.applicationContext)
     }
 }
+

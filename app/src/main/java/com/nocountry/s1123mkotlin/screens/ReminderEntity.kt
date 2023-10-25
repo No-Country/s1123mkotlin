@@ -5,10 +5,12 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "reminder")
 data class ReminderEntity(
-    @PrimaryKey val id: String,
+    @PrimaryKey
+    val id: String,
     val title: String,
     val date: Long,
     val time: Long,
-    val repeatInterval: String
+    val repeatInterval: String,
+    var eventId: Long? = null
 )
 

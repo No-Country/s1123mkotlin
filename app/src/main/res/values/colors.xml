@@ -4,11 +4,16 @@
 
     <color name="texto">#FFFFFF</color>
 
-    <color name="fondoBotones">#F0C8CB</color>
+    <color name="fondoBotones">#DC5466</color>
 
-    <color name="textoBotones">#283BB5</color>
+    <color name="textoBotones">#F2D8DB</color>
 
     <color name="titulos">#FDFEFF</color>
 
     <color name="TopAppBar">#ABB4DF</color>
+
+    <color name="Recordatorios">#074EF9</color>
+
+    <color name="fondo_sintomas">#9FAEAC</color>
+
 </resources>

@@ -23,6 +23,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.nocountry.s1123mkotlin.AppScreens
 import com.nocountry.s1123mkotlin.ui.theme.MediChildTheme
 import com.nocuntry.s1123mkotlin.R
 
@@ -64,7 +66,9 @@ fun WelcomeScreen(navController: NavController) {
                             "Registra, crea y configura tus recordatorios para mantener a tus hijos saludables. " +
                             "Confía en MediChild para cuidar a quienes más amas y descubre la paz de un cuidado de salud más sencillo.",
                     style = MaterialTheme.typography.h6.copy(color = Color.White),
-                    modifier = Modifier.fillMaxWidth().align(Alignment.End)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.End)
                 )
 
             }
@@ -86,3 +90,4 @@ fun WelcomeScreen(navController: NavController) {
         isFloatingActionButtonDocked = true,
     )
 }
+

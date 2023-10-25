@@ -1,37 +1,37 @@
 package com.nocountry.s1123mkotlin.screens
 
-import android.icu.util.Calendar
-import android.content.ContentValues
-import android.content.Context
-import android.provider.CalendarContract
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.Alignment
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.nocountry.c1322ftkotlin.model.CalendarRepository.getCalendarId
 import com.nocuntry.s1123mkotlin.R
+import java.util.*
+import android.content.Intent
+import android.provider.CalendarContract
+import android.app.Activity
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.nocountry.s1123mkotlin.screens.ReminderEntity
+import com.nocountry.s1123mkotlin.ui.theme.MediChildTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import java.util.UUID
 
 @Composable
 fun RemindersScreen(
@@ -42,9 +42,22 @@ fun RemindersScreen(
 
     var selectedDate by remember { mutableStateOf(Calendar.getInstance()) }
     var selectedTime by remember { mutableStateOf(Calendar.getInstance()) }
+    var reminderTitle by remember { mutableStateOf(TextFieldValue()) }
 
-    var isDatePickerDialogVisible by remember { mutableStateOf(false) }
-    var isTimePickerDialogVisible by remember { mutableStateOf(false) }
+    // Lista mutable para almacenar eventos de calendario
+    val calendarEvents = remember { mutableStateListOf<CalendarEvent>() }
+
+    // Inicializar el launcher para abrir la aplicación de calendario
+    val calendarLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val eventTitle = reminderTitle.text
+            val eventDate = selectedDate.timeInMillis
+            val eventTime = selectedTime.timeInMillis
+
+            // Agregar el evento a la lista de eventos de calendario
+            calendarEvents.add(CalendarEvent(eventTitle, eventDate, eventTime))
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -56,8 +69,7 @@ fun RemindersScreen(
             text = "Recordatorios",
             style = MaterialTheme.typography.h6.copy(color = Color.White),
             textAlign = TextAlign.Center,
-            modifier = Modifier
-                .padding(16.dp)
+            modifier = Modifier.padding(16.dp)
         )
 
         DateTimePicker(
@@ -67,71 +79,74 @@ fun RemindersScreen(
             onTimeSelected = { newTime -> selectedTime = newTime }
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Spacer(
+        TextField(
+            value = reminderTitle,
+            onValueChange = { reminderTitle = it },
+            label = { Text("Nombre del Recordatorio") },
             modifier = Modifier
-                .height(16.dp)
+                .fillMaxWidth()
+                .padding(8.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = colorResource(id = R.color.fondoBotones),
+                cursorColor = Color.White,
+                textColor = Color.White
+            )
         )
+    }
 
-        RemindersList(reminders, navController)
+    Spacer(modifier = Modifier.height(16.dp))
 
-        // Botón para agregar un nuevo recordatorio
-        Box(
-            modifier = Modifier.fillMaxSize()
-        )
-        {
-            FloatingActionButton(
-                onClick = {
-                    val newReminder = ReminderEntity(
-                        id = UUID.randomUUID().toString(),
-                        title = "Nuevo Recordatorio",
-                        date = selectedDate.timeInMillis,
-                        time = selectedTime.timeInMillis,
-                        repeatInterval = "Diario"
-                    )
-                    runBlocking(Dispatchers.IO) {
-                        reminderRepository.insert(newReminder)
-                    }
+    // Lista de recordatorios
+    RemindersList(reminders, navController)
 
-                    selectedDate = Calendar.getInstance()
-                    selectedTime = Calendar.getInstance()
-                },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(16.dp)
-                    .background(colorResource(id = R.color.fondoBotones))
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Agregar Recordatorio"
+    // Lista de eventos de calendario
+    CalendarEventsList(calendarEvents)
+
+    // Botón para agregar un nuevo recordatorio
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.fondoBotones))
+    ) {
+        FloatingActionButton(
+            onClick = {
+                // Abre la aplicación del calendario
+                val calendarIntent = Intent(Intent.ACTION_INSERT)
+                    .setData(CalendarContract.Events.CONTENT_URI)
+                    .putExtra(CalendarContract.Events.TITLE, reminderTitle.text)
+                    .putExtra(CalendarContract.Events.ALL_DAY, false)
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, selectedDate.timeInMillis)
+                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, selectedDate.timeInMillis + 3600000) // Duración de 1 hora
+
+                calendarLauncher.launch(calendarIntent)
+
+                // Agregar el recordatorio a la lista
+                val newReminder = ReminderEntity(
+                    id = UUID.randomUUID().toString(),
+                    title = reminderTitle.text,
+                    date = selectedDate.timeInMillis,
+                    time = selectedTime.timeInMillis,
+                    repeatInterval = "Diario"
                 )
-            }
-        }
-    }
+                runBlocking(Dispatchers.IO) {
+                    reminderRepository.insert(newReminder)
+                }
 
+                selectedDate = Calendar.getInstance()
+                selectedTime = Calendar.getInstance()
+                reminderTitle = TextFieldValue()
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
 
-    if (isDatePickerDialogVisible) {
-        DatePickerDialog(
-            selectedDate,
-            onDateSelected = { newDate ->
-                selectedDate = newDate
-                isDatePickerDialogVisible = false
-            }
         ) {
-            isDatePickerDialogVisible = false
-        }
-    }
-
-    // Diálogo de selección de hora personalizado
-    if (isTimePickerDialogVisible) {
-        TimePickerDialog(
-            selectedTime,
-            onTimeSelected = { newTime ->
-                selectedTime = newTime
-                isTimePickerDialogVisible = false
-            }
-        ) {
-            isTimePickerDialogVisible = false
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Agregar Recordatorio"
+            )
         }
     }
 }
@@ -143,95 +158,9 @@ fun DateTimePicker(
     selectedTime: Calendar,
     onTimeSelected: (Calendar) -> Unit
 ) {
-    var isDatePickerVisible by remember { mutableStateOf(false) }
-    var isTimePickerVisible by remember { mutableStateOf(false) }
-
-    Column {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        ) {
-            Button(
-                onClick = {
-                    isDatePickerVisible = true
-                },
-                modifier = Modifier
-                    .weight(1f) // Asigna un peso igual a cada botón
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.buttonColors(
-                    colorResource(id = R.color.fondoBotones)
-                )
-            ) {
-                Text(
-                    text = "Fecha",
-                    color = colorResource(id = R.color.textoBotones)
-                )
-            }
-
-            Button(
-                onClick = {
-                    isTimePickerVisible = true
-                },
-                modifier = Modifier
-                    .weight(1f) // Asigna un peso igual a cada botón
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.buttonColors(
-                    colorResource(id = R.color.fondoBotones)
-                )
-            ) {
-                Text(
-                    text = "Hora",
-                    color = colorResource(id = R.color.textoBotones),
-                    fontSize = 12.sp
-                )
-            }
-        }
-    }
-
-    if (isDatePickerVisible) {
-        DatePickerDialog(selectedDate, onDateSelected) {
-            isDatePickerVisible = false
-        }
-    }
-
-    if (isTimePickerVisible) {
-        TimePickerDialog(selectedTime, onTimeSelected) {
-            isTimePickerVisible = false
-        }
-    }
+    // Implementa la selección de fecha y hora aquí si es necesario
+    // ...
 }
-
-@Composable
-fun DatePickerDialog(
-    selectedDate: Calendar,
-    onDateSelected: (Calendar) -> Unit,
-    onDismiss: () -> Unit
-) {
-    Dialog(
-        onDismissRequest = { onDismiss() }
-    ) {
-
-    }
-}
-
-@Composable
-fun TimePickerDialog(
-    selectedTime: Calendar,
-    onTimeSelected: (Calendar) -> Unit,
-    onDismiss: () -> Unit
-) {
-    Dialog(
-        onDismissRequest = { onDismiss() }
-    ) {
-
-    }
-}
-
 
 @Composable
 fun RemindersList(reminders: List<ReminderEntity>, navController: NavController) {
@@ -242,6 +171,11 @@ fun RemindersList(reminders: List<ReminderEntity>, navController: NavController)
     }
 }
 
+@Composable
+fun CalendarEventsList(calendarEvents: List<CalendarEvent>) {
+    // Implementa la lista de eventos de calendario
+    // ...
+}
 
 @Composable
 fun ReminderCard(reminder: ReminderEntity, navController: NavController) {
@@ -249,6 +183,7 @@ fun ReminderCard(reminder: ReminderEntity, navController: NavController) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
+                // Implementa la navegación a la pantalla de detalle del recordatorio aquí
                 navController.navigate("recordatorio/${reminder.id}")
             }
     ) {
@@ -279,32 +214,9 @@ fun ReminderCard(reminder: ReminderEntity, navController: NavController) {
     }
 }
 
-fun createCalendarEvent(context: Context, title: String, dateInMillis: Long) {
-    val calendar = Calendar.getInstance()
-    val event = ContentValues()
+data class CalendarEvent(
+    val title: String,
+    val dateInMillis: Long,
+    val timeInMillis: Long
+)
 
-    val calendarId = getCalendarId(
-        context.contentResolver,
-        "Calendario de Recordatorios"
-    ) // Reemplaza con el nombre de tu calendario
-
-    if (calendarId != null) {
-        event.put(CalendarContract.Events.CALENDAR_ID, calendarId)
-        event.put(CalendarContract.Events.TITLE, title)
-        event.put(CalendarContract.Events.DESCRIPTION, "Descripción del Recordatorio")
-        event.put(CalendarContract.Events.EVENT_TIMEZONE, calendar.timeZone.id)
-        event.put(CalendarContract.Events.DTSTART, dateInMillis)
-        event.put(CalendarContract.Events.DTEND, dateInMillis)
-
-        // Insertar evento en el calendario
-        context.contentResolver.insert(CalendarContract.Events.CONTENT_URI, event)
-    } else {
-
-    }
-}
-
-@Preview
-@Composable
-fun RemindersScreenPreview() {
-    RemindersScreenPreview()
-}

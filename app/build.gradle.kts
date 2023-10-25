@@ -2,6 +2,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("com.android.application")
     id("com.google.dagger.hilt.android")
+    id ("kotlin-android")
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
@@ -60,12 +61,28 @@ android {
         javacOptions {
             option("-Adagger.hilt.android.internal.disableAndroidSuperclassValidation=true")
         }
-        
-        useBuildCache = true // Opcional, para habilitar la caché de compilación
     }
 }
 
 dependencies {
+    //openIA
+//    implementation ("com.aallam.openai:api:1.0.1")
+    implementation ("com.aallam.openai:openai-client-bom:3.5.0")
+    implementation ("com.aallam.openai:openai-client:3.3.0")
+
+
+    implementation ("io.ktor:ktor-client-android:2.3.2")
+    implementation ("io.ktor:ktor-client-okhttp:2.3.2")
+
+    implementation ("com.aallam.openai:openai-client")
+    implementation ("io.ktor:ktor-client-okhttp")
+
+    implementation ("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.0")
+
+    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+    implementation ("io.coil-kt:coil-compose:1.3.2")
+
 
     // Dependencias de Compose Material 3
     implementation("androidx.compose.material3:material3:1.0.0-beta01")

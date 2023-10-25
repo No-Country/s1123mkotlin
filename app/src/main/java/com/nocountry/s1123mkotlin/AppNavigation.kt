@@ -3,21 +3,25 @@ package com.nocountry.s1123mkotlin
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.nocountry.s1123mkotlin.screens.Dashboard
 import com.nocountry.s1123mkotlin.screens.ReminderRepository
+import com.nocountry.s1123mkotlin.screens.Dashboard
 import com.nocountry.s1123mkotlin.screens.RemindersScreen
+import com.nocountry.s1123mkotlin.screens.SintomasScreen
 import com.nocountry.s1123mkotlin.screens.WelcomeScreen
+import com.nocuntry.medichild.viewmodel.IAViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 
 
 @Composable
-fun AppNavigation(navController: NavHostController, reminderRepository: ReminderRepository) {
-
+fun AppNavigation(navController: NavHostController,
+                  reminderRepository: ReminderRepository,
+                  viewModel: IAViewModel) {
 
 
 
@@ -49,9 +53,14 @@ fun AppNavigation(navController: NavHostController, reminderRepository: Reminder
 
         }
 
-        composable(route= AppScreens.sintomas.route){
-
+        composable(route = AppScreens.sintomas.route) {
+            SintomasScreen(
+                viewModel = viewModel,
+                reminderRepository = reminderRepository
+            )
         }
+
+
 
         composable(route= AppScreens.farmacias.route){
 
