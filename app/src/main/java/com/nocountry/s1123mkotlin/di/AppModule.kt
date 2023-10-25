@@ -1,9 +1,7 @@
 package com.nocountry.s1123mkotlin.di
 
 import android.app.Application
-import android.content.Context
 import androidx.room.Room
-import com.nocountry.s1123mkotlin.AppDatabase
 import com.nocountry.s1123mkotlin.screens.ReminderRepository
 import com.nocountry.s1123mkotlin.screens.ReminderDao
 import dagger.Module

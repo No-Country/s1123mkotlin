@@ -4,10 +4,13 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
@@ -48,7 +51,7 @@ fun WelcomeScreen(navController: NavController) {
                     painter = painterResource(id = R.drawable.medichild),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(250.dp)
+                        .size(200.dp)
                         .padding(top = 22.dp)
                 )
                 Spacer(modifier = Modifier.height(20.dp))
@@ -78,9 +81,10 @@ fun WelcomeScreen(navController: NavController) {
                 onClick = {
                     navController.navigate("dashboard")
                 },
+                shape= CircleShape,
                 content = {
                     Icon(
-                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_add),
+                        Icons.Filled.Add,
                         contentDescription = "Dashboard"
                     )
                 },

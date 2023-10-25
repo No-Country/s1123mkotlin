@@ -24,7 +24,7 @@ class IAViewModel @Inject constructor() : ViewModel() {
 
     init {
         // Saludo inicial
-        addMessage("¡Hola! Soy tu asistente de IA para temas médicos básicos. ¿En qué puedo ayudarte hoy?", Color.Blue)
+        addMessage("¡Hola! Soy tu asistente de IA para temas médicos básicos. ¿En qué puedo ayudarte hoy?", Color.DarkGray)
     }
 
     fun sendMessage(message: String) {

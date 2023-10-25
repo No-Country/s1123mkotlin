@@ -27,7 +27,7 @@ fun SintomasScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(Color.DarkGray)
             .padding(16.dp)
     ) {
         Spacer(modifier = Modifier.height(16.dp))
@@ -36,7 +36,7 @@ fun SintomasScreen(
             item {
                 Column {
                     Text(
-                        text = "Chat con la IA",
+                        text = "Chat con MediChild_IA",
                         style = androidx.compose.material.MaterialTheme.typography.h6.copy(color = Color.White),
                     )
 

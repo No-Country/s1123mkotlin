@@ -25,9 +25,14 @@ import android.content.Intent
 import android.provider.CalendarContract
 import android.app.Activity
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.nocountry.s1123mkotlin.ViewModel.RemindersScreenViewModel
 import com.nocountry.s1123mkotlin.screens.ReminderEntity
 import com.nocountry.s1123mkotlin.ui.theme.MediChildTheme
 import kotlinx.coroutines.Dispatchers
@@ -36,7 +41,8 @@ import kotlinx.coroutines.runBlocking
 @Composable
 fun RemindersScreen(
     navController: NavController,
-    reminderRepository: ReminderRepository
+    reminderRepository: ReminderRepository,
+    remindersViewModel: RemindersScreenViewModel
 ) {
     val reminders by reminderRepository.allReminders.collectAsState(emptyList())
 
@@ -99,7 +105,7 @@ fun RemindersScreen(
     Spacer(modifier = Modifier.height(16.dp))
 
     // Lista de recordatorios
-    RemindersList(reminders, navController)
+    RemindersList(reminders, navController, viewModel = viewModel())
 
     // Lista de eventos de calendario
     CalendarEventsList(calendarEvents)
@@ -138,13 +144,14 @@ fun RemindersScreen(
                 selectedTime = Calendar.getInstance()
                 reminderTitle = TextFieldValue()
             },
+            shape= CircleShape,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
 
         ) {
             Icon(
-                imageVector = Icons.Default.Add,
+                Icons.Filled.Add,
                 contentDescription = "Agregar Recordatorio"
             )
         }
@@ -163,13 +170,14 @@ fun DateTimePicker(
 }
 
 @Composable
-fun RemindersList(reminders: List<ReminderEntity>, navController: NavController) {
+fun RemindersList(reminders: List<ReminderEntity>, navController: NavController, viewModel: RemindersScreenViewModel) {
     LazyColumn {
         items(reminders) { reminder ->
-            ReminderCard(reminder, navController)
+            ReminderCard(reminder, navController, viewModel)
         }
     }
 }
+
 
 @Composable
 fun CalendarEventsList(calendarEvents: List<CalendarEvent>) {
@@ -178,7 +186,7 @@ fun CalendarEventsList(calendarEvents: List<CalendarEvent>) {
 }
 
 @Composable
-fun ReminderCard(reminder: ReminderEntity, navController: NavController) {
+fun ReminderCard(reminder: ReminderEntity, navController: NavController, viewModel: RemindersScreenViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -194,7 +202,8 @@ fun ReminderCard(reminder: ReminderEntity, navController: NavController) {
         ) {
             Text(
                 text = reminder.title,
-                color = Color.DarkGray
+                color = Color.DarkGray,
+                fontSize = 16.sp
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -210,6 +219,19 @@ fun ReminderCard(reminder: ReminderEntity, navController: NavController) {
                 text = "Repetición: ${reminder.repeatInterval}",
                 color = Color.DarkGray
             )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = {
+                    // Eliminar el recordatorio
+                    viewModel.deleteReminder(reminder)
+                },
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Text("Eliminar", color = Color.White)
+            }
         }
     }
 }
