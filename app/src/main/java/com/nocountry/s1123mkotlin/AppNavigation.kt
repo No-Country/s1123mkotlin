@@ -1,27 +1,37 @@
 package com.nocountry.s1123mkotlin
 
+
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.nocountry.s1123mkotlin.screens.ReminderRepository
+import com.nocountry.s1123mkotlin.consultas.ConsultasScreenViewModel
+import com.nocountry.s1123mkotlin.recordatorios.DetallesRecordatorioScreen
+import com.nocountry.s1123mkotlin.recordatorios.RecordatoriosViewModel
+import com.nocountry.s1123mkotlin.screens.ConsultasScreen
 import com.nocountry.s1123mkotlin.screens.Dashboard
-import com.nocountry.s1123mkotlin.screens.RemindersScreen
+import com.nocountry.s1123mkotlin.screens.RecordatoriosScreen
 import com.nocountry.s1123mkotlin.screens.SintomasScreen
 import com.nocountry.s1123mkotlin.screens.WelcomeScreen
-import com.nocuntry.medichild.viewmodel.IAViewModel
+import com.nocountry.s1123mkotlin.sintomas.AddSymptomNoteScreen
+import com.nocountry.s1123mkotlin.sintomas.SymptomNotesViewModel
 
+
+@ExperimentalMaterial3Api
 @RequiresApi(Build.VERSION_CODES.O)
 
 
 @Composable
-fun AppNavigation(navController: NavHostController,
-                  reminderRepository: ReminderRepository,
-                  viewModel: IAViewModel) {
+fun AppNavigation(
+    navController: NavHostController,
+    viewModel: SymptomNotesViewModel
+) {
+    val consultasViewModel = viewModel<ConsultasScreenViewModel>()
+    val recordatoriosViewModel = viewModel<RecordatoriosViewModel>()
 
 
 
@@ -42,30 +52,58 @@ fun AppNavigation(navController: NavHostController,
             )
         }
 
-        composable(route = AppScreens.recordatorios.route) {
-            RemindersScreen(
+        composable(route = AppScreens.Reminders.route) {
+            RecordatoriosScreen(
                 navController = navController,
-                reminderRepository = reminderRepository
+                viewModel = viewModel()
             )
         }
 
-        composable(route= AppScreens.consultas.route){
+        composable(route= AppScreens.Consultas.route){
+            ConsultasScreen(
+                navController = navController,
+                viewModel = consultasViewModel
+            )
+        }
+        composable("detalles_recordatorios/{titulo}") { backStackEntry ->
+            val titulo = backStackEntry.arguments?.getString("titulo")
+            val recordatorio = recordatoriosViewModel.findRecordatorioByTitulo(titulo.toString())
+
+            if (recordatorio != null) {
+                // Renderizar la pantalla de detalles del recordatorio con el objeto recordatorio
+                DetallesRecordatorioScreen(recordatorio = recordatorio, navController= navController)
+            } else {
+                // Manejar el caso en el que no se encuentra el recordatorio
+            }
+        }
+
+
+        composable(route= AppScreens.Farmacias.route){
 
         }
 
-        composable(route = AppScreens.sintomas.route) {
+        composable(route = AppScreens.Sintomas.route) {
             SintomasScreen(
                 viewModel = viewModel,
-                reminderRepository = reminderRepository
+                navController = navController
             )
         }
 
-
-
-        composable(route= AppScreens.farmacias.route){
-
+        composable("add_sintoma") {
+           AddSymptomNoteScreen(
+                viewModel = viewModel,
+                navController = navController
+            )
         }
+
     }
 }
+
+
+
+
+
+
+
 
 

@@ -65,11 +65,20 @@ android {
 }
 
 dependencies {
+    //ViewModel:
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-livedata:2.3.1")
+    implementation ("androidx.compose.runtime:runtime-livedata:1.0.5")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
+
     //openIA
-//    implementation ("com.aallam.openai:api:1.0.1")
+    implementation ("com.aallam.openai:openai-client")
+    implementation("androidx.benchmark:benchmark-macro:1.2.0")
+    runtimeOnly ("io.ktor:ktor-client-okhttp")
+
     implementation ("com.aallam.openai:openai-client-bom:3.5.0")
     implementation ("com.aallam.openai:openai-client:3.3.0")
-
 
     implementation ("io.ktor:ktor-client-android:2.3.2")
     implementation ("io.ktor:ktor-client-okhttp:2.3.2")
@@ -83,11 +92,9 @@ dependencies {
     implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
     implementation ("io.coil-kt:coil-compose:1.3.2")
 
-
     // Dependencias de Compose Material 3
     implementation("androidx.compose.material3:material3:1.0.0-beta01")
     implementation("androidx.compose.material3:material3")
-
 
     //Alarm
     implementation("androidx.core:core-ktx:1.7.0")
@@ -96,7 +103,6 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.7.1")
 
     implementation("androidx.core:core-ktx:1.8.0")
-
 
     implementation("androidx.constraintlayout:constraintlayout-compose-android:1.1.0-alpha13")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
@@ -109,7 +115,6 @@ dependencies {
 
     val nav_version = "2.5.3"
     implementation("androidx.navigation:navigation-compose:$nav_version")
-
 
     // Dependencia de Room
     val room_version = "2.5.0"
@@ -137,10 +142,6 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling:1.0.4")
     implementation("androidx.compose.material:material:1.0.4")
     implementation("androidx.activity:activity-compose:1.3.1")
-
-    //ViewModel:
-    implementation("androidx.lifecycle:lifecycle-viewmodel:2.3.1")
-    implementation("androidx.lifecycle:lifecycle-livedata:2.3.1")
 
 
     //Retrofit

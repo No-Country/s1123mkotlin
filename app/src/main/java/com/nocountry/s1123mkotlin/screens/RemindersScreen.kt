@@ -1,240 +1,142 @@
 package com.nocountry.s1123mkotlin.screens
 
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.compose.rememberLauncherForActivityResult
+import android.content.Intent
+import android.provider.CalendarContract
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.Card
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.NavController
+import com.nocountry.s1123mkotlin.recordatorios.Recordatorio
+import com.nocountry.s1123mkotlin.recordatorios.RecordatoriosViewModel
 import com.nocuntry.s1123mkotlin.R
-import java.util.*
-import android.content.Intent
-import android.provider.CalendarContract
-import android.app.Activity
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
-import com.nocountry.s1123mkotlin.ViewModel.RemindersScreenViewModel
-import com.nocountry.s1123mkotlin.screens.ReminderEntity
-import com.nocountry.s1123mkotlin.ui.theme.MediChildTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RemindersScreen(
+fun RecordatoriosScreen(
     navController: NavController,
-    reminderRepository: ReminderRepository,
-    remindersViewModel: RemindersScreenViewModel
+    viewModel: RecordatoriosViewModel
 ) {
-    val reminders by reminderRepository.allReminders.collectAsState(emptyList())
-
-    var selectedDate by remember { mutableStateOf(Calendar.getInstance()) }
-    var selectedTime by remember { mutableStateOf(Calendar.getInstance()) }
-    var reminderTitle by remember { mutableStateOf(TextFieldValue()) }
-
-    // Lista mutable para almacenar eventos de calendario
-    val calendarEvents = remember { mutableStateListOf<CalendarEvent>() }
-
-    // Inicializar el launcher para abrir la aplicación de calendario
-    val calendarLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val eventTitle = reminderTitle.text
-            val eventDate = selectedDate.timeInMillis
-            val eventTime = selectedTime.timeInMillis
-
-            // Agregar el evento a la lista de eventos de calendario
-            calendarEvents.add(CalendarEvent(eventTitle, eventDate, eventTime))
-        }
-    }
+    var recordatorios by remember { mutableStateOf(mutableListOf<Recordatorio>()) }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.fondo))
-            .padding(16.dp)
+            .background(colorResource(id = R.color.Recordatorios))
     ) {
-        Text(
-            text = "Recordatorios",
-            style = MaterialTheme.typography.h6.copy(color = Color.White),
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(16.dp)
+        TopAppBar(
+            title = { androidx.compose.material3.Text("Recordatorios") }
         )
-
-        DateTimePicker(
-            selectedDate = selectedDate,
-            onDateSelected = { newDate -> selectedDate = newDate },
-            selectedTime = selectedTime,
-            onTimeSelected = { newTime -> selectedTime = newTime }
-        )
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        TextField(
-            value = reminderTitle,
-            onValueChange = { reminderTitle = it },
-            label = { Text("Nombre del Recordatorio") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = colorResource(id = R.color.fondoBotones),
-                cursorColor = Color.White,
-                textColor = Color.White
-            )
-        )
-    }
-
-    Spacer(modifier = Modifier.height(16.dp))
-
-    // Lista de recordatorios
-    RemindersList(reminders, navController, viewModel = viewModel())
-
-    // Lista de eventos de calendario
-    CalendarEventsList(calendarEvents)
-
-    // Botón para agregar un nuevo recordatorio
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.fondoBotones))
-    ) {
+        // FAB para agregar un nuevo recordatorio
         FloatingActionButton(
             onClick = {
-                // Abre la aplicación del calendario
-                val calendarIntent = Intent(Intent.ACTION_INSERT)
-                    .setData(CalendarContract.Events.CONTENT_URI)
-                    .putExtra(CalendarContract.Events.TITLE, reminderTitle.text)
-                    .putExtra(CalendarContract.Events.ALL_DAY, false)
-                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, selectedDate.timeInMillis)
-                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, selectedDate.timeInMillis + 3600000) // Duración de 1 hora
-
-                calendarLauncher.launch(calendarIntent)
-
-                // Agregar el recordatorio a la lista
-                val newReminder = ReminderEntity(
-                    id = UUID.randomUUID().toString(),
-                    title = reminderTitle.text,
-                    date = selectedDate.timeInMillis,
-                    time = selectedTime.timeInMillis,
-                    repeatInterval = "Diario"
-                )
-                runBlocking(Dispatchers.IO) {
-                    reminderRepository.insert(newReminder)
+                val newRecordatorio = openGoogleCalendarForReminder(context as ComponentActivity)
+                if (newRecordatorio != null) {
+                    viewModel.addRecordatorio(newRecordatorio)
+                    recordatorios = viewModel.getRecordatorios() as MutableList<Recordatorio>
                 }
-
-                selectedDate = Calendar.getInstance()
-                selectedTime = Calendar.getInstance()
-                reminderTitle = TextFieldValue()
             },
-            shape= CircleShape,
             modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-
+                .fillMaxSize()
+                .fillMaxSize()
+                .wrapContentSize(Alignment.BottomEnd)
         ) {
             Icon(
-                Icons.Filled.Add,
+                Icons.Default.Add,
                 contentDescription = "Agregar Recordatorio"
             )
         }
-    }
-}
 
-@Composable
-fun DateTimePicker(
-    selectedDate: Calendar,
-    onDateSelected: (Calendar) -> Unit,
-    selectedTime: Calendar,
-    onTimeSelected: (Calendar) -> Unit
-) {
-    // Implementa la selección de fecha y hora aquí si es necesario
-    // ...
-}
-
-@Composable
-fun RemindersList(reminders: List<ReminderEntity>, navController: NavController, viewModel: RemindersScreenViewModel) {
-    LazyColumn {
-        items(reminders) { reminder ->
-            ReminderCard(reminder, navController, viewModel)
+        // Mostrar la lista de recordatorios
+        // Mostrar la lista de recordatorios
+        for (recordatorio in recordatorios) {
+            RecordatorioItem(
+                recordatorio = recordatorio,
+                onRecordatorioClick = { clickedRecordatorio ->
+                    navController.navigate("detalles_recordatorio/${clickedRecordatorio.titulo}")
+                }
+            )
         }
     }
 }
 
-
 @Composable
-fun CalendarEventsList(calendarEvents: List<CalendarEvent>) {
-    // Implementa la lista de eventos de calendario
-    // ...
-}
-
-@Composable
-fun ReminderCard(reminder: ReminderEntity, navController: NavController, viewModel: RemindersScreenViewModel) {
+fun RecordatorioItem(
+    recordatorio: Recordatorio,
+    onRecordatorioClick: (Recordatorio) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                // Implementa la navegación a la pantalla de detalle del recordatorio aquí
-                navController.navigate("recordatorio/${reminder.id}")
-            }
+            .clickable { onRecordatorioClick(recordatorio) } // Llama a la función con el recordatorio cuando se hace clic
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+            modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = reminder.title,
-                color = Color.DarkGray,
-                fontSize = 16.sp
+                text = recordatorio.titulo,
+                style = MaterialTheme.typography.h6
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = "Fecha: ${reminder.date}, Hora: ${reminder.time}",
-                color = Color.DarkGray
+                text = recordatorio.description,
+                style = MaterialTheme.typography.body2
             )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "Repetición: ${reminder.repeatInterval}",
-                color = Color.DarkGray
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Button(
-                onClick = {
-                    // Eliminar el recordatorio
-                    viewModel.deleteReminder(reminder)
-                },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
-                modifier = Modifier.align(Alignment.End)
-            ) {
-                Text("Eliminar", color = Color.White)
-            }
         }
     }
 }
+
+private fun openGoogleCalendarForReminder(activity: ComponentActivity): Recordatorio {
+    val intent = Intent(Intent.ACTION_INSERT)
+    intent.data = CalendarContract.Events.CONTENT_URI
+    intent.putExtra(CalendarContract.Events.TITLE, "Tomar medicamento")
+    intent.putExtra(CalendarContract.Events.DESCRIPTION, "Tomar medicamento recetado")
+    intent.putExtra(CalendarContract.Events.EVENT_LOCATION, "Domicilio")
+    intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, System.currentTimeMillis())
+
+    // Asegúrate de verificar si hay aplicaciones disponibles para manejar el intent.
+    if (intent.resolveActivity(activity.packageManager) != null) {
+        activity.startActivity(intent)
+    }
+
+    val fecha = System.currentTimeMillis()
+        .toString()
+    val nuevoRecordatorio = Recordatorio( "Tomar medicamento", "Domicilio", "Ubicación", fecha)
+
+    return nuevoRecordatorio
+}
+
 
 data class CalendarEvent(
     val title: String,

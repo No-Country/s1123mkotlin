@@ -46,7 +46,7 @@ fun MediChildTheme(
     content: @Composable () -> Unit
 ) {
     val fondoPantallas = colorResource(id = R.color.fondo)
-    val fondoBotones = colorResource(id = R.color.fondoBotones)
+    val fondoBotones = colorResource(id = R.color.fondob)
     val textoBotones = colorResource(id = R.color.textoBotones)
     val texto = colorResource(id = R.color.texto)
 
