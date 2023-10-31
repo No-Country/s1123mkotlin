@@ -8,7 +8,6 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.devtools.ksp")
     id("kotlin-kapt")
-
 }
 
 
@@ -65,32 +64,31 @@ android {
 }
 
 dependencies {
+    //maps
+    implementation ("com.google.maps.android:maps-ktx:3.2.1")
+    implementation ("com.google.maps.android:maps-utils-ktx:3.2.1")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel:2.4.0")
+
+
+    implementation ("androidx.activity:activity-compose:1.8.0")
+    implementation ("androidx.core:core-ktx:1.6.0")
+
+    implementation ("com.google.accompanist:accompanist-permissions:0.23.0")
+
+
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+    implementation ("com.google.android.gms:play-services-maps:18.2.0")
+    implementation ("com.google.android.libraries.places:places:3.2.0") {
+        exclude( group= "com.android.support")
+    }
+    implementation ("com.google.maps:google-maps-services:0.15.0")
+
     //ViewModel:
     implementation("androidx.lifecycle:lifecycle-viewmodel:2.3.1")
     implementation("androidx.lifecycle:lifecycle-livedata:2.3.1")
     implementation ("androidx.compose.runtime:runtime-livedata:1.0.5")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
-
-    //openIA
-    implementation ("com.aallam.openai:openai-client")
-    implementation("androidx.benchmark:benchmark-macro:1.2.0")
-    runtimeOnly ("io.ktor:ktor-client-okhttp")
-
-    implementation ("com.aallam.openai:openai-client-bom:3.5.0")
-    implementation ("com.aallam.openai:openai-client:3.3.0")
-
-    implementation ("io.ktor:ktor-client-android:2.3.2")
-    implementation ("io.ktor:ktor-client-okhttp:2.3.2")
-
-    implementation ("com.aallam.openai:openai-client")
-    implementation ("io.ktor:ktor-client-okhttp")
-
-    implementation ("com.squareup.okhttp3:okhttp:4.9.1")
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.0")
-
-    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
-    implementation ("io.coil-kt:coil-compose:1.3.2")
 
     // Dependencias de Compose Material 3
     implementation("androidx.compose.material3:material3:1.0.0-beta01")

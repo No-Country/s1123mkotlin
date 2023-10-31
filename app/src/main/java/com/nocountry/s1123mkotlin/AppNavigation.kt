@@ -10,10 +10,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.nocountry.s1123mkotlin.consultas.ConsultasScreenViewModel
+import com.nocountry.s1123mkotlin.farmacias.FarmaciasViewModel
 import com.nocountry.s1123mkotlin.recordatorios.DetallesRecordatorioScreen
 import com.nocountry.s1123mkotlin.recordatorios.RecordatoriosViewModel
 import com.nocountry.s1123mkotlin.screens.ConsultasScreen
 import com.nocountry.s1123mkotlin.screens.Dashboard
+import com.nocountry.s1123mkotlin.screens.FarmaciasScreen
 import com.nocountry.s1123mkotlin.screens.RecordatoriosScreen
 import com.nocountry.s1123mkotlin.screens.SintomasScreen
 import com.nocountry.s1123mkotlin.screens.WelcomeScreen
@@ -32,6 +34,7 @@ fun AppNavigation(
 ) {
     val consultasViewModel = viewModel<ConsultasScreenViewModel>()
     val recordatoriosViewModel = viewModel<RecordatoriosViewModel>()
+    val farmaciasViewModel = viewModel<FarmaciasViewModel>()
 
 
 
@@ -78,9 +81,13 @@ fun AppNavigation(
         }
 
 
-        composable(route= AppScreens.Farmacias.route){
-
+        composable(route = AppScreens.Farmacias.route) {
+            FarmaciasScreen(
+                navController = navController,
+                viewModel= farmaciasViewModel
+            )
         }
+
 
         composable(route = AppScreens.Sintomas.route) {
             SintomasScreen(
