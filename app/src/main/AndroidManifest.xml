@@ -24,6 +24,10 @@
         android:theme="@style/Theme.S1123mkotlin"
         tools:targetApi="31">
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -40,12 +44,6 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="medication_channel" />
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
 
-        <meta-data
-            android:name="com.google.android.places.API_KEY"
-            android:value="@string/google_place_key" />
     </application>
 </manifest>

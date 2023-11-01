@@ -74,6 +74,7 @@ dependencies {
     implementation ("androidx.core:core-ktx:1.6.0")
 
     implementation ("com.google.accompanist:accompanist-permissions:0.23.0")
+    implementation("com.google.maps.android:maps-compose:1.0.0")
 
 
     implementation ("com.google.android.gms:play-services-location:21.0.1")
@@ -145,9 +146,14 @@ dependencies {
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2")
+    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.9.1")
+
+
 
     //Firebase
-    implementation("com.google.firebase:firebase-analytics:20.0.0") // Asegúrate de tener la versión correcta
+    implementation("com.google.firebase:firebase-analytics:20.0.0")
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")

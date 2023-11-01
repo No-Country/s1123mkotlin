@@ -1,47 +1,32 @@
 package com.nocountry.s1123mkotlin.farmacias
 
 import android.app.Application
-import android.content.pm.PackageManager
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
-import com.google.android.libraries.places.api.Places
+import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse
-import com.google.android.libraries.places.api.net.PlacesClient
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
+import com.nocuntry.s1123mkotlin.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-@HiltViewModel
-class FarmaciasViewModel @Inject constructor(application: Application) : AndroidViewModel(application) {
-    private val placesClient: PlacesClient = Places.createClient(application)
+class FarmaciasViewModel(application: Application) : AndroidViewModel(application) {
+    private val apiKey: String = application.getString(R.string.openrouteservice_apikey)
     var farmacias: List<Place> by mutableStateOf(emptyList())
+    private val apiService: ApiService = getRetrofit(application).create(ApiService::class.java)
 
-    suspend fun buscarFarmaciasCercanas() {
-        val placeFields = listOf(Place.Field.NAME, Place.Field.ADDRESS)
-        val request = FindCurrentPlaceRequest.newInstance(placeFields)
-
-        val hasLocationPermission = checkPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
-
-        if (hasLocationPermission == PackageManager.PERMISSION_GRANTED) {
-            try {
-                val response: FindCurrentPlaceResponse = placesClient.findCurrentPlace(request).await()
-                if (response != null) {
-                    val places = response.placeLikelihoods.map { it.place }
-                    // Update the farmacias list with the obtained data
-                    farmacias = places
+    fun findFarmaciaRoutes(start: String, end: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = apiService.getRoute(apiKey, start, end)
+            if (response.isSuccessful) {
+                val routeResponse = response.body()
+                if (routeResponse != null) {
+                    // Procesar los datos del enrutamiento aquí si es necesario
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
-    fun checkPermission(permission: String): Int {
-        return ContextCompat.checkSelfPermission(getApplication(), permission)
-    }
+    // Otras funciones para buscar farmacias, obtener la ubicación del usuario, etc.
 }
