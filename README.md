@@ -9,7 +9,9 @@ Jetpack Compose: La biblioteca de Android utilizada para crear la interfaz de us
 
 # Colaboradoras 👥
 Ludmila Ferrari
+
 Florencia Bonduel
+
 Diana Cuta
 
 
