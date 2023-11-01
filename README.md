@@ -4,6 +4,7 @@ MediChild es una aplicación que te ayuda a gestionar los medicamentos de tus hi
 
 # Tecnologías Utilizadas 💻
 Kotlin: El lenguaje de programación utilizado para desarrollar la aplicación.
+
 Jetpack Compose: La biblioteca de Android utilizada para crear la interfaz de usuario moderna y atractiva.
 
 # Colaboradoras 👥
